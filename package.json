@@ -1,0 +1,37 @@
+{
+  "name": "tts_bot",
+  "version": "1.0.0",
+  "description": "this bot is beta",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/787B-R26B/tts_bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/787B-R26B/tts_bot/issues"
+  },
+  "homepage": "https://github.com/787B-R26B/tts_bot#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "eslint": "^9.22.0",
+    "globals": "^16.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1"
+  },
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7"
+  },
+  "scripts":{
+    "test": "ts-node src/main.js",
+    "start" : "node build/main.js",
+    "compile" : "tsc -p ."
+  }
+}
