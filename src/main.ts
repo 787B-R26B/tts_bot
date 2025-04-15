@@ -14,7 +14,7 @@ const client = new Client({
 }) 
 
 const voicevox_key = (process.env.VOICEVOX_KEY)
-const voivevoc_url = ('')
+const voivevox_url = `https://deprecatedapis.tts.quest/v2/voicevox/audio/?text=${voicevox_key}&key=${voicevox_key}`
 const prefix = '!'
 let channelId: string|null = null
 let channelName: string|undefined
@@ -30,7 +30,7 @@ client.on('ready', (message) => {
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return
     if (message.channel.id == channelId && message.content.length >= 1 ){
-
+		
     }
 
     if (!message.content.startsWith(prefix)) return
@@ -38,6 +38,9 @@ client.on('messageCreate', async (message) => {
     try{
         if (command === 'start'){
             channelId = message.channel.id
+	    const channel = message.member?.voice.channel
+	    if(!channel) return message.reply ('VCに未参加です')
+
             message.channel.send('読み上げを開始するよ')
         }else if (command === 'end'){
             channelId = null
