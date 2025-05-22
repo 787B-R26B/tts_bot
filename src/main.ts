@@ -63,7 +63,7 @@ client.on('messageCreate', async (message) => {
             console.log('')
         }else if (command === 'shutdown'){
             if (!message.member?.permissions.has('Administrator')){
-                message.channel.send ('permisson denied.')
+                message.channel.send ('permisson denied. you are not administrator.')
                 return
             }
             await client.destroy            
