@@ -1,6 +1,7 @@
 import { GatewayIntentBits, Client, Partials, Message,SlashCommandBuilder } from 'discord.js'
 import { entersState } from '@discordjs/voice'
 import dotenv from 'dotenv'
+import axios from 'axios'
 
 dotenv.config()
 
@@ -14,7 +15,7 @@ const client = new Client({
 }) 
 
 const voicevox_key = (process.env.VOICEVOX_KEY)
-const voivevox_url = `https://deprecatedapis.tts.quest/v2/voicevox/audio/?text=${voicevox_key}&key=${voicevox_key}`
+const voicevox_url = 'https://deprecatedapis.tts.quest/v2/voicevox/audio/'
 const prefix = '!'
 let channelId: string|null = null
 let channelName: string|undefined
@@ -35,10 +36,22 @@ client.on('messageCreate', async (message) => {
 
     if (!message.content.startsWith(prefix)) return
     const [command, ...args] = message.content.slice(prefix.length).split(/\s+g/)
+    async function getvoice(text:string) {
+        try {
+            const response = await axios.post(voicevox_url, {
+                text: text,
+                key: voicevox_key
+            })
+        } catch (error){
+            console.log('error')
+        }
+    }
+
     try{
         if (command === 'start'){
             channelId = message.channel.id
 	    const channel = message.member?.voice.channel
+
 	    if(!channel) return message.reply ('VCに未参加です')
 
             message.channel.send('読み上げを開始するよ')
@@ -54,6 +67,8 @@ client.on('messageCreate', async (message) => {
                 return
             }
             await client.destroy            
+        }else if (command === 'usage'){
+            
         }
     }catch(e){
         if (e instanceof Error){
