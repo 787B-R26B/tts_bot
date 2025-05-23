@@ -22,8 +22,8 @@ let channelName: string|undefined
 
 async function getusage(){
     const response = await fetch ('https://deprecatedapis.tts.quest/v2/api/', {
-        method: 'GET',
-        headers: new Headers({'Authorization': `api-key ${voicevox_key}`})
+        method: 'POST',
+        key: voicevox_key
     })
     return response.text()
 }
