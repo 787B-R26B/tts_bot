@@ -50,10 +50,8 @@ client.on('messageCreate', async (message) => {
     try{
         if (command === 'start'){
             channelId = message.channel.id
-	    const channel = message.member?.voice.channel
-
-	    if(!channel) return message.reply ('VCに未参加です')
-
+	        const channel = message.member?.voice.channel
+            if(!channel) return message.reply ('VCに未参加です')
             message.channel.send('読み上げを開始するよ')
         }else if (command === 'end'){
             channelId = null
@@ -68,7 +66,16 @@ client.on('messageCreate', async (message) => {
             }
             await client.destroy            
         }else if (command === 'usage'){
-            
+            async function getusage(text:string) {
+             try {
+                const response = await axios.post('https://deprecatedapis.tts.quest/v2/api/',{
+                    key: voicevox_key
+                })
+                message.channel.send(response.data)
+             } catch(error){
+                message.channel.send('error.')
+             }
+            }
         }
     }catch(e){
         if (e instanceof Error){
