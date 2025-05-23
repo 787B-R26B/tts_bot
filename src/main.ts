@@ -53,18 +53,20 @@ client.on('messageCreate', async (message) => {
 	        const channel = message.member?.voice.channel
             if(!channel) return message.reply ('VCに未参加です')
             message.channel.send('読み上げを開始するよ')
+            
         }else if (command === 'end'){
             channelId = null
             channelName = message.member?.voice.channel?.name
             message.channel.send(channelName+'から切断されました')
         }else if (command === 'help'){
-            console.log('')
+            message.channel.send('ggrks')
         }else if (command === 'shutdown'){
             if (!message.member?.permissions.has('Administrator')){
                 message.channel.send ('permisson denied. you are not administrator.')
                 return
             }
-            await client.destroy            
+            await client.destroy()
+                        
         }else if (command === 'usage'){
             async function getusage(text:string) {
              try {
