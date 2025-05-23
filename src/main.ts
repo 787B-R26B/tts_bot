@@ -20,6 +20,14 @@ const prefix = '!'
 let channelId: string|null = null
 let channelName: string|undefined
 
+async function getusage(){
+    const response = await fetch ('https://deprecatedapis.tts.quest/v2/api/', {
+        method: 'GET',
+        headers: new Headers({'Authorization': `api-key ${voicevox_key}`})
+    })
+    return response.text()
+}
+
 client.on('ready', (message) => {
     console.log('discord bot is ready!')
     setInterval(() => {
@@ -66,18 +74,10 @@ client.on('messageCreate', async (message) => {
                 return
             }
             await client.destroy()
-                        
+
         }else if (command === 'usage'){
-            async function getusage(text:string) {
-             try {
-                const response = await axios.post('https://deprecatedapis.tts.quest/v2/api/',{
-                    key: voicevox_key
-                })
-                message.channel.send(response.data)
-             } catch(error){
-                message.channel.send('error.')
-             }
-            }
+            const usage = await getusage()
+            message.channel.send(usage)
         }
     }catch(e){
         if (e instanceof Error){
