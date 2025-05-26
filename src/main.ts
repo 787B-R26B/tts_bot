@@ -96,7 +96,7 @@ client.on('messageCreate', async (message) => {
         }else if (command === 'usage'){
             getusage(voicevox_usage, voicevox_key)
             .then(usage => {
-                message.channel.send(usage)
+                message.channel.send(`usage:${usage}`)
             })
             .catch(err => {
                 message.channel.send(err)
