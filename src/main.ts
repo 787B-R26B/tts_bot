@@ -16,7 +16,7 @@ const client = new Client({
 
 const voicevox_key = (process.env.VOICEVOX_KEY)
 const voicevox_url = 'https://deprecatedapis.tts.quest/v2/voicevox/audio/'
-const voicevox_usage = 'https://deprecatedapis.tts.quest/v2/voicevox/api/'
+const voicevox_usage = 'https://deprecatedapis.tts.quest/v2/api/'
 const prefix = '!'
 let channelId: string|null = null
 let channelName: string|undefined
@@ -31,19 +31,21 @@ async function getusage(apiUrl: string, apiKey: string|undefined): Promise<strin
             'Content-Type':'application/x-www-form-urlencoded',
     },
     body: params.toString(),
-})
+    })
 
-if (!response.ok) {
+    if (!response.ok) {
+    const error_text = await response.text()
+    console.error(`API request failed: ${response.status} ${response.statusText}\n${error_text}`)
     throw new Error(`API request failed`)
-}
-
-const data = await response.json()
-
-return data.usage
-    }catch (error){
-        console.error('faild to fetch api usage:', error)
-        throw error
     }
+
+    const data = await response.json()
+
+    return `Points: ${data.points}, Reset in: ${data.resetInHours} hours`
+        }catch (error){
+            console.error('faild to fetch api usage:', error)
+            throw error
+        }
 }
 
 
