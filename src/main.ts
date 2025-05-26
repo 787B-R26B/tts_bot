@@ -23,12 +23,14 @@ let channelName: string|undefined
 
 async function getusage(apiUrl: string, apiKey: string|undefined): Promise<string> {
     try{
+    const params = new URLSearchParams()
+    params.append('key', apiKey ?? '')
     const response = await fetch (apiUrl, {
         method: 'POST',
         headers: {
-            'Content-Type':'application/json',
+            'Content-Type':'application/x-www-form-urlencoded',
     },
-    body: JSON.stringify({ key: apiKey }),
+    body: params.toString(),
 })
 
 if (!response.ok) {
