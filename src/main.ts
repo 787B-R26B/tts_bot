@@ -1,4 +1,4 @@
-import { GatewayIntentBits, Client, Partials, Message,SlashCommandBuilder } from 'discord.js'
+import { GatewayIntentBits, Client, Partials, Message,SlashCommandBuilder, applicationDirectory } from 'discord.js'
 import { entersState } from '@discordjs/voice'
 import dotenv from 'dotenv'
 import axios from 'axios'
@@ -16,16 +16,44 @@ const client = new Client({
 
 const voicevox_key = (process.env.VOICEVOX_KEY)
 const voicevox_url = 'https://deprecatedapis.tts.quest/v2/voicevox/audio/'
+const voicevox_usage = 'https://deprecatedapis.tts.quest/v2/voicevox/api/'
 const prefix = '!'
 let channelId: string|null = null
 let channelName: string|undefined
 
-async function getusage(){
-    const response = await fetch ('https://deprecatedapis.tts.quest/v2/api/', {
+async function getusage(apiUrl: string, apiKey: string|undefined): Promise<string> {
+    try{
+    const response = await fetch (apiUrl, {
         method: 'POST',
-        name: voicevox_key
-    })
-    return response.text()
+        headers: {
+            'Content-Type':'application/json',
+    },
+    body: JSON.stringify({ key: apiKey }),
+})
+
+if (!response.ok) {
+    throw new Error(`API request failed`)
+}
+
+const data = await response.json()
+
+return data.usage
+    }catch (error){
+        console.error('faild to fetch api usage:', error)
+        throw error
+    }
+}
+
+
+async function getvoice() {
+    try {
+        const response = await axios.post(voicevox_url, {
+            text: Text,
+            key: voicevox_key
+        })
+    } catch (error){
+        console.log('error')
+    }
 }
 
 client.on('ready', (message) => {
@@ -44,16 +72,6 @@ client.on('messageCreate', async (message) => {
 
     if (!message.content.startsWith(prefix)) return
     const [command, ...args] = message.content.slice(prefix.length).split(/\s+g/)
-    async function getvoice(text:string) {
-        try {
-            const response = await axios.post(voicevox_url, {
-                text: text,
-                key: voicevox_key
-            })
-        } catch (error){
-            console.log('error')
-        }
-    }
 
     try{
         if (command === 'start'){
@@ -76,8 +94,13 @@ client.on('messageCreate', async (message) => {
             await client.destroy()
 
         }else if (command === 'usage'){
-            const usage = await getusage()
-            message.channel.send(usage)
+            getusage(voicevox_usage, voicevox_key)
+            .then(usage => {
+                message.channel.send(usage)
+            })
+            .catch(err => {
+                message.channel.send(err)
+            })
         }
     }catch(e){
         if (e instanceof Error){
