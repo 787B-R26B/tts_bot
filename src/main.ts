@@ -23,29 +23,22 @@ let channelName: string|undefined
 
 async function getusage(apiUrl: string, apiKey: string|undefined): Promise<string> {
     try{
-    const params = new URLSearchParams()
-    params.append('key', apiKey ?? '')
     const response = await fetch (apiUrl, {
         method: 'POST',
         headers: {
-            'Content-Type':'application/x-www-form-urlencoded',
+            'Content-Type':'application/json',
     },
-    body: params.toString(),
-    })
-
+    body: JSON.stringify({ key: apiKey }),
+})
     if (!response.ok) {
-    const error_text = await response.text()
-    console.error(`API request failed: ${response.status} ${response.statusText}\n${error_text}`)
     throw new Error(`API request failed`)
+}
+const data = await response.json()
+return data.usage
+    }catch (error){
+        console.error('faild to fetch api usage:', error)
+        throw error
     }
-
-    const data = await response.json()
-
-    return `Points: ${data.points}, Reset in: ${data.resetInHours} hours`
-        }catch (error){
-            console.error('faild to fetch api usage:', error)
-            throw error
-        }
 }
 
 
@@ -73,7 +66,6 @@ client.on('messageCreate', async (message) => {
     if (message.channel.id == channelId && message.content.length >= 1 ){
 		
     }
-
     if (!message.content.startsWith(prefix)) return
     const [command, ...args] = message.content.slice(prefix.length).split(/\s+g/)
 
